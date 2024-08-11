@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import UserProfile from "../todooo/user-profile";
+import UserProfile from "./user-profile";
 import {primaryNavItems} from "@/utils"
 
 export default function SideBar() {

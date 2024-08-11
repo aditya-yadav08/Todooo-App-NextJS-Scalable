@@ -1,7 +1,7 @@
 import MobileNav from "@/components/nav/mobile-nav";
 import SideBar from "@/components/nav/side-bar";
 import Tasks from "@/components/todooo/tasks";
-import UserProfile from "@/components/todooo/user-profile";
+import UserProfile from "@/components/nav/user-profile";
 
 export default function Home() {
   return (

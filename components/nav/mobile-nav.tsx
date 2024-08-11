@@ -20,7 +20,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { primaryNavItems } from "@/utils";
-import UserProfile from "../todooo/user-profile";
+import UserProfile from "./user-profile";
 
 export default function MobileNav() {
   return (
