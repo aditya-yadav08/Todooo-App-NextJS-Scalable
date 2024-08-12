@@ -1,6 +1,5 @@
 "use client";
 
-import { boolean } from "convex-helpers/validators";
 import { ConvexProvider, ConvexReactClient } from "convex/react";
 import { Session } from "next-auth";
 import { SessionProvider, useSession } from "next-auth/react";
