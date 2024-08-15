@@ -1,53 +1,66 @@
-import { Id } from "./_generated/dataModel";
 import { query, mutation, action } from "./_generated/server";
 import { v } from "convex/values";
+import { handleUserId } from "./auth";
 
 export const get = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query("todos").collect();
+    const userId = await handleUserId(ctx);
+    if (userId) {
+      return await ctx.db
+        .query("todos")
+        .filter((q) => q.eq(q.field("userId"), userId))
+        .collect();
+    }
+    return [];
   },
 });
 
 export const completedTodos = query({
   args: {},
   handler: async (ctx) => {
-    const todos = await ctx.db
-      .query("todos")
-      .filter((q) => q.eq(q.field("isCompleted"), true))
-      .collect();
-
-    return todos;
+    const userId = await handleUserId(ctx);
+    if (userId) {
+      return await ctx.db
+        .query("todos")
+        .filter((q) => q.eq(q.field("userId"), userId))
+        .filter((q) => q.eq(q.field("isCompleted"), true))
+        .collect();
+    }
+    return [];
   },
 });
 
 export const inCompleteTodos = query({
   args: {},
   handler: async (ctx) => {
-    const todos = await ctx.db
-      .query("todos")
-      .filter((q) => q.eq(q.field("isCompleted"), false))
-      .collect();
-
-    return todos;
+    const userId = await handleUserId(ctx);
+    if (userId) {
+      return await ctx.db
+        .query("todos")
+        .filter((q) => q.eq(q.field("userId"), userId))
+        .filter((q) => q.eq(q.field("isCompleted"), false))
+        .collect();
+    }
+    return [];
   },
-
 });
 
 export const totalTodos = query({
   args: {},
   handler: async (ctx) => {
-    const todos = await ctx.db
-      .query("todos")
-      .filter((q) => q.eq(q.field("isCompleted"), true))
-      .collect();
-
-    return todos.length || 0;
-    
+    const userId = await handleUserId(ctx);
+    if (userId) {
+      const todos = await ctx.db
+        .query("todos")
+        .filter((q) => q.eq(q.field("userId"), userId))
+        .filter((q) => q.eq(q.field("isCompleted"), true))
+        .collect();
+      return todos.length || 0;
+    }
+    return 0;
   },
 });
-
-
 
 export const checkATodo = mutation({
   args: { taskId: v.id("todos") },
@@ -79,8 +92,10 @@ export const createATodo = mutation({
     { taskName, description, priority, dueDate, projectId, labelId }
   ) => {
     try {
+      const userId = await handleUserId(ctx);
+      if (userId) {
         const newTaskId = await ctx.db.insert("todos", {
-          userId: "jn7asd0mee8z0xw0pt3tmsyyt96ygxfn" as Id<"users">,
+          userId,
           taskName,
           description,
           priority,
@@ -90,9 +105,13 @@ export const createATodo = mutation({
           isCompleted: false,
         });
         return newTaskId;
-      } catch(err) {
-        console.log("Error occured during createATodo mutation")
-        return "";
       }
-      },
-    });
+
+      return null;
+    } catch (err) {
+      console.log("Error occurred during createATodo mutation", err);
+
+      return null;
+    }
+  },
+});

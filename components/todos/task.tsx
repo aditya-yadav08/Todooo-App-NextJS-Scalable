@@ -1,12 +1,25 @@
 import clsx from "clsx";
-import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
+import { Doc, Id } from "@/convex/_generated/dataModel";
+import AddTaskDailog from "../add-tasks/add-task-dailog";
 
-export default function Task({ taskName, _id, isCompleted, handleOnChange }) {
+export default function Task({
+  data,
+  isCompleted,
+  handleOnChange,
+}: {
+  data: Doc<"todos">;
+  _id: Id<"todos">;
+  isCompleted: boolean;
+  handleOnChange: any;
+}) {
+
+const { taskName } = data;
+  
   return (
     <div
-      key={_id}
+      key={data._id}
       className="flex items-center space-x-2 border-b-2 p-2 border-gray-100 animate-in fade-in"
     >
       <Dialog>
@@ -36,6 +49,7 @@ export default function Task({ taskName, _id, isCompleted, handleOnChange }) {
               </div>
             </DialogTrigger>
           </div>
+          <AddTaskDailog data={data} />
         </div>
       </Dialog>
     </div>
