@@ -1,16 +1,21 @@
 import clsx from "clsx";
 import { Checkbox } from "../ui/checkbox";
-import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
+import { Dialog, DialogTrigger } from "../ui/dialog";
 import { Doc, Id } from "@/convex/_generated/dataModel";
-import AddTaskDailog from "../add-tasks/add-task-dailog";
+import AddTaskDialog from "../add-tasks/add-task-dailog";
+
+function isSubTodo(
+  data: Doc<"todos"> | Doc<"subTodos">
+): data is Doc<"subTodos"> {
+  return "parentId" in data;
+}
 
 export default function Task({
   data,
   isCompleted,
   handleOnChange,
 }: {
-  data: Doc<"todos">;
-  _id: Id<"todos">;
+  data: Doc<"todos"> | Doc<"subTodos">;
   isCompleted: boolean;
   handleOnChange: any;
 }) {
@@ -49,7 +54,7 @@ const { taskName } = data;
               </div>
             </DialogTrigger>
           </div>
-          <AddTaskDailog data={data} />
+          {!isSubTodo(data) && <AddTaskDialog data={data} />}
         </div>
       </Dialog>
     </div>

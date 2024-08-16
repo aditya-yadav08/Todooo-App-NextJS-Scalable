@@ -1,6 +1,7 @@
 import { query, mutation, action } from "./_generated/server";
 import { v } from "convex/values";
 import { handleUserId } from "./auth";
+import moment from "moment";
 
 export const get = query({
   args: {},
@@ -77,6 +78,72 @@ export const unCheckATodo = mutation({
     return newTaskId;
   },
 });
+
+export const todayTodos = query({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await handleUserId(ctx);
+
+    if (userId) {
+      const todayStart = moment().startOf("day");
+      const todayEnd = moment().endOf("day");
+
+      return await ctx.db
+        .query("todos")
+        .filter((q) => q.eq(q.field("userId"), userId))
+        .filter(
+          (q) =>
+            q.gte(q.field("dueDate"), todayStart.valueOf()) &&
+            q.lte(todayEnd.valueOf(), q.field("dueDate"))
+        )
+        .collect();
+    }
+    return [];
+  },
+});
+
+export const overdueTodos = query({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await handleUserId(ctx);
+
+    if (userId) {
+      const todayStart = new Date();
+      todayStart.setHours(0, 0, 0, 0);
+
+      return await ctx.db
+        .query("todos")
+        .filter((q) => q.eq(q.field("userId"), userId))
+        .filter((q) => q.lt(q.field("dueDate"), todayStart.getTime()))
+        .collect();
+    }
+    return [];
+  },
+});
+
+export const groupTodosByDate = query({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await handleUserId(ctx);
+
+    if (userId) {
+      const todos = await ctx.db
+        .query("todos")
+        .filter((q) => q.eq(q.field("userId"), userId))
+        .filter((q) => q.gt(q.field("dueDate"), new Date().getTime()))
+        .collect();
+
+      const groupedTodos = todos.reduce<any>((acc, todo) => {
+        const dueDate = new Date(todo.dueDate).toDateString();
+        acc[dueDate] = (acc[dueDate] || []).concat(todo);
+        return acc;
+      }, {});
+
+      return groupedTodos;
+    }
+    return [];
+  },
+}); 
 
 export const createATodo = mutation({
   args: {

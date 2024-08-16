@@ -71,3 +71,40 @@ export const createASubTodo = mutation({
     }
   },
 });
+
+export const completedSubTodos = query({
+    args: {
+    //   parentId: v.id("todos"),
+    },
+    handler: async (ctx) => {
+      const userId = await handleUserId(ctx);
+      if (userId) {
+        const todos = await ctx.db
+          .query("subTodos")
+          .filter((q) => q.eq(q.field("userId"), userId))
+          .filter((q) => q.eq(q.field("isCompleted"), true))
+          .collect();
+  
+        return todos;
+      }
+      return [];
+    },
+  });
+  
+  export const inCompleteSubTodos = query({
+    args: {
+    //   parentId: v.id("todos"),
+    },
+    handler: async (ctx) => {
+      const userId = await handleUserId(ctx);
+      if (userId) {
+      const todos = await ctx.db
+        .query("subTodos")
+        .filter((q) => q.eq(q.field("userId"), userId))
+        .filter((q) => q.eq(q.field("isCompleted"), false))
+        .collect();
+      return todos;
+      }
+      return [];
+    },
+  });

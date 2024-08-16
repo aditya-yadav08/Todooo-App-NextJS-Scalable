@@ -54,22 +54,31 @@ const FormSchema = z.object({
 
 export default function AddTaskInline({
   setShowAddTask,
+  parentTask,
 }: {
   setShowAddTask: Dispatch<SetStateAction<boolean>>;
+  parentTask: Doc<"todos">;
 }) {
+
+  const projectId = parentTask?.projectId || "k97cpa1q8rbfjeecwzs26yzzq16yqmkk";
+  const labelId = parentTask?.labelId || "k5757cjp6d2nfr7exfmwmebb5s6yq1sv";
+  const priority = parentTask?.priority?.toString() || "1";
+  const parentId = parentTask?._id;
+
   const { toast } = useToast();
   const projects = useQuery(api.projects.getProjects) ?? [];
   const labels = useQuery(api.labels.getLabels) ?? [];
 
   const createATodoMutation = useMutation(api.todos.createATodo);
+  const createASubtodoMutation = useMutation(api.subTodos.createASubTodo);
 
   const defaultValues = {
     taskName: "",
     description: "",
-    priority: "1",
+    priority,
     dueDate: new Date(),
-    projectId: "k97cpa1q8rbfjeecwzs26yzzq16yqmkk" as Id<"projects">,
-    labelId: "k5757cjp6d2nfr7exfmwmebb5s6yq1sv" as Id<"labels">,
+    projectId,
+    labelId,
   };
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -81,24 +90,45 @@ export default function AddTaskInline({
     const { taskName, description, priority, dueDate, projectId, labelId } =
       data;
 
-    if (projectId) {
-      const mutationId = createATodoMutation({
-        taskName,
-        description,
-        priority: parseInt(priority),
-        dueDate: moment(dueDate).valueOf(),
-        projectId: projectId as Id<"projects">,
-        labelId: labelId as Id<"labels">,
-      });
-
-      if (mutationId !== undefined) {
-        toast({
-          title: "🦄 Created a task!",
-          duration: 3000,
-        });
-        form.reset({ ...defaultValues });
+      if (projectId) {
+        if (parentId) {
+          //subtodo
+          const mutationId = createASubtodoMutation({
+            parentId,
+            taskName,
+            description,
+            priority: parseInt(priority),
+            dueDate: moment(dueDate).valueOf(),
+            projectId: projectId as Id<"projects">,
+            labelId: labelId as Id<"labels">,
+          });
+  
+          if (mutationId !== undefined) {
+            toast({
+              title: "🦄 Created a task!",
+              duration: 3000,
+            });
+            form.reset({ ...defaultValues });
+          }
+        } else {
+          const mutationId = createATodoMutation({
+            taskName,
+            description,
+            priority: parseInt(priority),
+            dueDate: moment(dueDate).valueOf(),
+            projectId: projectId as Id<"projects">,
+            labelId: labelId as Id<"labels">,
+          });
+  
+          if (mutationId !== undefined) {
+            toast({
+              title: "🦄 Created a task!",
+              duration: 3000,
+            });
+            form.reset({ ...defaultValues });
+          }
+        }
       }
-    }
   }
   return (
     <div>
@@ -190,7 +220,7 @@ export default function AddTaskInline({
               name="priority"
               render={({ field }) => (
                 <FormItem>
-                  <Select onValueChange={field.onChange} defaultValue={"1"}>
+                  <Select onValueChange={field.onChange} defaultValue={priority}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select a Priority" />
@@ -216,7 +246,7 @@ export default function AddTaskInline({
                 <FormItem>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    defaultValue={labelId || field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -244,7 +274,7 @@ export default function AddTaskInline({
               <FormItem>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  defaultValue={projectId || field.value}
                 >
                   <FormControl>
                     <SelectTrigger>
