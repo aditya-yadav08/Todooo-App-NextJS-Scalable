@@ -16,6 +16,7 @@ import type {
 } from "convex/server";
 import type * as auth from "../auth.js";
 import type * as authAdapter from "../authAdapter.js";
+import type * as gemini from "../gemini.js";
 import type * as generateKeys from "../generateKeys.js";
 import type * as http from "../http.js";
 import type * as labels from "../labels.js";
@@ -34,6 +35,7 @@ import type * as todos from "../todos.js";
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   authAdapter: typeof authAdapter;
+  gemini: typeof gemini;
   generateKeys: typeof generateKeys;
   http: typeof http;
   labels: typeof labels;
