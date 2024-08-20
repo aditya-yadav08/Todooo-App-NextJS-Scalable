@@ -1,20 +1,19 @@
+import { api } from "@/convex/_generated/api";
 import { Doc } from "@/convex/_generated/dataModel";
+import { useMutation, useQuery } from "convex/react";
+import { format } from "date-fns";
+import { Calendar, ChevronDown, Flag, Hash, Tag } from "lucide-react";
+import { useEffect, useState } from "react";
+import Task from "../todos/task";
 import {
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from "../ui/dialog";
-import { Button } from "../ui/button";
 import { Label } from "../ui/label";
-import { Calendar, ChevronDown, Flag, Hash, Tag } from "lucide-react";
-import { format } from "date-fns";
-import { useMutation, useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
-import { useEffect, useState } from "react";
-import Task from "../todos/task";
 import { AddTaskWrapper } from "./add-task-button";
+import SuggestMissingTasks from "./suggest-tasks";
 
 export default function AddTaskDailog({
   data,
@@ -25,10 +24,10 @@ export default function AddTaskDailog({
   const project = useQuery(api.projects.getProjectByProjectId, { projectId });
   const label = useQuery(api.labels.getLabelByLabelId, { labelId });
   const inCompletedSubtodosByProject =
-  useQuery(api.subTodos.inCompleteSubTodos) ?? [];
+  useQuery(api.subTodos.inCompleteSubTodos, {parentId: _id }) ?? [];
 
 const completedSubtodosByProject =
-  useQuery(api.subTodos.completedSubTodos) ?? [];
+  useQuery(api.subTodos.completedSubTodos, {parentId: _id }) ?? [];
 
   const checkASubTodoMutation = useMutation(api.subTodos.checkASubTodo);
   const unCheckASubTodoMutation = useMutation(api.subTodos.unCheckASubTodo);
@@ -76,7 +75,15 @@ const completedSubtodosByProject =
               <p className="font-bold flex text-sm text-gray-900">Sub-tasks</p>
             </div>
             <div>
-              <Button variant={"outline"}> Suggest Missing Tasks (AI)</Button>
+            <div>
+              <SuggestMissingTasks
+                projectId={projectId}
+                taskName={taskName}
+                description={description}
+                parentId={_id}
+                isSubTask={true}
+              />
+            </div>
             </div>
           </div>
           <div className="pl-4">

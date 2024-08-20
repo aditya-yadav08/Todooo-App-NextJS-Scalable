@@ -1,8 +1,7 @@
-import React from "react";
-import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
-import { Button } from "../ui/button";
-import { CircleUser, LineChart, Menu, Search } from "lucide-react";
+import { primaryNavItems } from "@/utils";
+import { CircleUser, Menu, PlusIcon, Search } from "lucide-react";
 import Link from "next/link";
+import { Button } from "../ui/button";
 import {
   Card,
   CardContent,
@@ -10,7 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { Input } from "../ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,12 +17,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { primaryNavItems } from "@/utils";
+import { Input } from "../ui/input";
+import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import UserProfile from "./user-profile";
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 
 export default function MobileNav() {
   return (
-    <div className="flex flex-col">
       <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
         <Sheet>
           <SheetTrigger asChild>
@@ -50,6 +49,15 @@ export default function MobileNav() {
                   {name}
                 </Link>
               ))}
+              <Dialog>
+                <DialogTrigger id="closeDialog">
+                  <p className="flex justify-between items-center">
+                    My Projects
+                    <PlusIcon className="h-5 w-5" aria-label="Add a Project"/>
+                  </p>
+                </DialogTrigger>
+                <DialogContent>HIii</DialogContent>
+              </Dialog>
             </nav>
             <div className="mt-auto">
               <Card>
@@ -98,6 +106,5 @@ export default function MobileNav() {
           </DropdownMenuContent>
         </DropdownMenu>
       </header>
-    </div>
   );
 }
