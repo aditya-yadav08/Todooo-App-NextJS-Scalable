@@ -114,3 +114,17 @@ export const suggestMissingSubItemsWithAi = action({
     }
   },
 });
+
+export const getEmbeddingsWithAI = async (searchText: string) => {
+  if (!apiKey) {
+    throw new Error("Gemini AI Key is not defined");
+  }
+
+  const model = apiKey.getGenerativeModel({ model: "text-embedding-004" });
+  const text = searchText;
+  const result = await model.embedContent(text);
+
+  const vector = result.embedding.values;
+  console.log(`Embedding of ${searchText}: , ${vector.length} dimensions`);
+  return vector;
+};

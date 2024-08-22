@@ -1,6 +1,8 @@
 import { query, mutation, action } from "./_generated/server";
 import { v } from "convex/values";
 import { handleUserId } from "./auth";
+import { getEmbeddingsWithAI } from "./gemini";
+import { api } from "./_generated/api";
 
 export const get = query({
   args: {},
@@ -58,10 +60,20 @@ export const createASubTodo = mutation({
     projectId: v.id("projects"),
     labelId: v.id("labels"),
     parentId: v.id("todos"),
+    embedding: v.optional(v.array(v.float64())),
   },
   handler: async (
     ctx,
-    { taskName, description, priority, dueDate, projectId, labelId, parentId }
+    {
+      taskName,
+      description,
+      priority,
+      dueDate,
+      projectId,
+      labelId,
+      parentId,
+      embedding,
+    }
   ) => {
     try {
       const userId = await handleUserId(ctx);
@@ -76,6 +88,7 @@ export const createASubTodo = mutation({
           projectId,
           labelId,
           isCompleted: false,
+          embedding,
         });
         return newTaskId;
       }
@@ -108,14 +121,14 @@ export const completedSubTodos = query({
     return [];
   },
 });
-  
-  export const inCompleteSubTodos = query({
-    args: {
-      parentId: v.id("todos"),
-    },
-    handler: async (ctx, { parentId }) => {
-      const userId = await handleUserId(ctx);
-      if (userId) {
+
+export const inCompleteSubTodos = query({
+  args: {
+    parentId: v.id("todos"),
+  },
+  handler: async (ctx, { parentId }) => {
+    const userId = await handleUserId(ctx);
+    if (userId) {
       const todos = await ctx.db
         .query("subTodos")
         .filter((q) => q.eq(q.field("userId"), userId))
@@ -123,7 +136,35 @@ export const completedSubTodos = query({
         .filter((q) => q.eq(q.field("isCompleted"), false))
         .collect();
       return todos;
-      }
-      return [];
-    },
-  });
+    }
+    return [];
+  },
+});
+
+export const createSubTodoAndEmbeddings = action({
+  args: {
+    taskName: v.string(),
+    description: v.optional(v.string()),
+    priority: v.number(),
+    dueDate: v.number(),
+    projectId: v.id("projects"),
+    labelId: v.id("labels"),
+    parentId: v.id("todos"),
+  },
+  handler: async (
+    ctx,
+    { taskName, description, priority, dueDate, projectId, labelId, parentId }
+  ) => {
+    const embedding = await getEmbeddingsWithAI(taskName);
+    await ctx.runMutation(api.subTodos.createASubTodo, {
+      taskName,
+      description,
+      priority,
+      dueDate,
+      projectId,
+      labelId,
+      parentId,
+      embedding,
+    });
+  },
+});
