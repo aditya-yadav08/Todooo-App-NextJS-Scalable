@@ -44,6 +44,7 @@ export const suggestMissingItemsWithAi = action({
       const { taskName, description } = task;
 
       if (taskName && description) {
+        const embedding = await getEmbeddingsWithAI(taskName);
         const AI_LABEL_ID = "k574vq4y8w9t2qv80kcfktv6w96z1dad";
 
         await ctx.runMutation(api.todos.createATodo, {
@@ -53,6 +54,7 @@ export const suggestMissingItemsWithAi = action({
           dueDate: new Date().getTime(),
           projectId,
           labelId: AI_LABEL_ID as Id<"labels">,
+          embedding,
         });
       }
     }
@@ -79,7 +81,7 @@ export const suggestMissingSubItemsWithAi = action({
     let prompt = `
     I'm a project manager and I need help identifying missing sub tasks for a Parent Todo, Also here is the Parent Todo Task Name: ${JSON.stringify(taskName)} and Description: ${JSON.stringify(description)}.
     I have a list of existing sub tasks: ${JSON.stringify(subTodos)}, containing objects with 'taskName' and 'description' properties.
-    Can you help me identify 5 additional to-do items for the project that is not yet included in this list?
+    Can you help me identify 3 additional to-do items for the project that is not yet included in this list?
     I also have a good understanding of the project scope, which is ${projectName}.
     Please provide the missing sub task as a task name and description.
     Ensure there are no duplicates between the existing list and the new suggestion.
@@ -99,6 +101,7 @@ export const suggestMissingSubItemsWithAi = action({
       const { taskName, description } = task;
 
       if (taskName && description) {
+        const embedding = await getEmbeddingsWithAI(taskName);
         const AI_LABEL_ID = "k574vq4y8w9t2qv80kcfktv6w96z1dad";
 
         await ctx.runMutation(api.subTodos.createASubTodo, {
@@ -109,6 +112,7 @@ export const suggestMissingSubItemsWithAi = action({
           projectId,
           parentId,
           labelId: AI_LABEL_ID as Id<"labels">,
+          embedding,
         });
       }
     }
