@@ -16,7 +16,13 @@ import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import SearchForm from "./search-form";
 import UserProfile from "./user-profile";
 
-export default function MobileNav() {
+export default function MobileNav({
+  navTitle = "",
+  navLink = "#",
+}: {
+  navTitle?: string;
+  navLink?: string;
+}) {
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
       <Sheet>
@@ -69,8 +75,10 @@ export default function MobileNav() {
       </Sheet>
       <div className="flex items-center md:justify-between w-full gap-1 md:gap-2 py-2">
         <div className="lg:flex-1">
-          <Link href="/loggedin/projects">
-            <p className="text-sm font-semibold text-foreground/70 w-24">/ My Projects</p>
+          <Link href={navLink}>
+            <p className="text-sm font-semibold text-foreground/70 w-24">
+              {navTitle}
+            </p>
           </Link>
         </div>
         <div className="place-content-center w-full flex-1">
