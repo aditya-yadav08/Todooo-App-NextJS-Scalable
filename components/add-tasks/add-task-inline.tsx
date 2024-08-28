@@ -39,7 +39,7 @@ const FormSchema = z.object({
   taskName: z.string().min(2, {
     message: "Task Name must be at least 2 characters.",
   }),
-  description: z.string().optional(),
+  description: z.string().optional().default(""),
   dueDate: z.date({ required_error: "A due date is required" }),
   priority: z.string().min(1, {
     message: "Please select a Priority",
@@ -55,13 +55,15 @@ const FormSchema = z.object({
 export default function AddTaskInline({
   setShowAddTask,
   parentTask,
+  projectId: myProjectId,
 }: {
   setShowAddTask: Dispatch<SetStateAction<boolean>>;
-  parentTask: Doc<"todos">;
+  parentTask?: Doc<"todos">;
+  projectId?: Id<"projects">;
 }) {
 
-  const projectId = parentTask?.projectId || "k97cpa1q8rbfjeecwzs26yzzq16yqmkk";
-  const labelId = parentTask?.labelId || "k5757cjp6d2nfr7exfmwmebb5s6yq1sv";
+  const projectId = myProjectId || parentTask?.projectId || "k97cpa1q8rbfjeecwzs26yzzq16yqmkk" as Id<"projects">;
+  const labelId = parentTask?.labelId || "k5757cjp6d2nfr7exfmwmebb5s6yq1sv" as Id<"labels">;
   const priority = parentTask?.priority?.toString() || "1";
   const parentId = parentTask?._id;
 
@@ -132,7 +134,6 @@ export default function AddTaskInline({
   }
   return (
     <div>
-      {JSON.stringify(form.getValues(), null, 2)}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -167,7 +168,6 @@ export default function AddTaskInline({
                     <Textarea
                       id="description"
                       placeholder="Description"
-                      required
                       className="resize-none"
                       {...field}
                     />

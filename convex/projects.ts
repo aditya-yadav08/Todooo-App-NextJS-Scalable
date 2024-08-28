@@ -39,3 +39,28 @@ export const getProjectByProjectId = query({
     return null;
   },
 });
+
+export const createAProject = mutation({
+  args: {
+    name: v.string(),
+  },
+  handler: async (ctx, { name }) => {
+    try {
+      const userId = await handleUserId(ctx);
+      if (userId) {
+        const newTaskId = await ctx.db.insert("projects", {
+          userId,
+          name,
+          type: "user",
+        });
+        return newTaskId;
+      }
+
+      return null;
+    } catch (err) {
+      console.log("Error occurred during createAProject mutation", err);
+
+      return null;
+    }
+  },
+});

@@ -24,7 +24,7 @@ export const suggestMissingItemsWithAi = action({
     let prompt = `
     I'm a project manager and I need help identifying missing to-do items.
     I have a list of existing tasks: ${JSON.stringify(todos)}, containing objects with 'taskName' and 'description' properties.
-    Can you help me identify 5 additional to-do items for the project that is not yet included in this list?
+    Can you help me identify 3 additional to-do items for the project that is not yet included in this list?
     I also have a good understanding of the project scope, which is ${projectName}.
     Please provide the missing item as a task name and description.
     Ensure there are no duplicates between the existing list and the new suggestion.

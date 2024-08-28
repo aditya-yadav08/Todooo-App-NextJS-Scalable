@@ -15,6 +15,7 @@ import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import SearchForm from "./search-form";
 import UserProfile from "./user-profile";
+import AddProjectDialog from "../projects/add-project-dialog";
 
 export default function MobileNav({
   navTitle = "",
@@ -45,15 +46,10 @@ export default function MobileNav({
                 {name}
               </Link>
             ))}
-            <Dialog>
-              <DialogTrigger id="closeDialog">
-                <p className="flex justify-between items-center">
-                  My Projects
-                  <PlusIcon className="h-5 w-5" aria-label="Add a Project" />
-                </p>
-              </DialogTrigger>
-              <DialogContent>HIii</DialogContent>
-            </Dialog>
+            <div className="flex items-center mt-6 mb-2">
+              <p className="flex flex-1 text-base">My Projects</p>
+              <AddProjectDialog />
+            </div>
           </nav>
           <div className="mt-auto">
             <Card>
