@@ -18,15 +18,19 @@ function useAuth() {
     () => ({
       isLoading: false,
       isAuthenticated: session !== null,
-      fetchAccessToken: async ({ forceRefreshToken }: { forceRefreshToken: boolean }) => {
+      fetchAccessToken: async ({
+        forceRefreshToken,
+      }: {
+        forceRefreshToken: boolean;
+      }) => {
         if (forceRefreshToken) {
-          const updatedSession = await update();
-          return convexTokenFromSession(updatedSession);
+          const session = await update();
+          return convexTokenFromSession(session);
         }
         return convexToken;
       },
     }),
-    [convexToken, session, update] // Include all necessary dependencies
+    [JSON.stringify(session?.user)]
   );
 }
 
