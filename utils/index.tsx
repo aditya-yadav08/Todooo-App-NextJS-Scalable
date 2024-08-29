@@ -22,4 +22,6 @@ export const primaryNavItems = [
       link: "/loggedin/filter-labels",
       icon: <Grid2X2 className="w-4 h-4" />,
     },
-  ];
+];
+
+export const GET_STARTED_PROJECT_ID = "k97cpa1q8rbfjeecwzs26yzzq16yqmkk";

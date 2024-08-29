@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,17 +8,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import UserProfile from "./user-profile";
-import { primaryNavItems } from "@/utils";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
-import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { useEffect, useState } from "react";
 import { Doc } from "@/convex/_generated/dataModel";
-import { Hash, PlusIcon } from "lucide-react";
-import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
+import { cn } from "@/lib/utils";
+import { primaryNavItems } from "@/utils";
+import { useQuery } from "convex/react";
+import { Hash } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import AddProjectDialog from "../projects/add-project-dialog";
+import UserProfile from "./user-profile";
 
 interface MyListTitleType {
   [key: string]: string;
