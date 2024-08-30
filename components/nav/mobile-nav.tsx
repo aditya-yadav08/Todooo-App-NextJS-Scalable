@@ -1,21 +1,21 @@
-import todoooLogo from "@/public/next.svg";
-import { primaryNavItems } from "@/utils";
-import { Menu, PlusIcon } from "lucide-react";
-import Image from "next/image";
+import { Menu } from "lucide-react";
 import Link from "next/link";
-import { Button } from "../ui/button";
+
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
-import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
-import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
+} from "@/components/ui/card";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { primaryNavItems } from "@/utils";
+import Image from "next/image";
 import SearchForm from "./search-form";
 import UserProfile from "./user-profile";
-import AddProjectDialog from "../projects/add-project-dialog";
+
+import todoooLogo from "@/public/logo.svg";
 
 export default function MobileNav({
   navTitle = "",
@@ -36,19 +36,20 @@ export default function MobileNav({
         <SheetContent side="left" className="flex flex-col">
           <nav className="grid gap-2 text-lg font-medium">
             <UserProfile />
+
             {primaryNavItems.map(({ name, icon, link }, idx) => (
               <Link
                 key={idx}
                 href={link}
-                className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 hover:text-foreground"
+                className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2  hover:text-foreground"
               >
                 {icon}
                 {name}
               </Link>
             ))}
+
             <div className="flex items-center mt-6 mb-2">
               <p className="flex flex-1 text-base">My Projects</p>
-              <AddProjectDialog />
             </div>
           </nav>
           <div className="mt-auto">
@@ -72,15 +73,15 @@ export default function MobileNav({
       <div className="flex items-center md:justify-between w-full gap-1 md:gap-2 py-2">
         <div className="lg:flex-1">
           <Link href={navLink}>
-            <p className="text-sm font-semibold text-foreground/70 w-24">
+            {/* <p className="text-sm font-semibold text-foreground/70 w-24">
               {navTitle}
-            </p>
+            </p> */}
           </Link>
         </div>
         <div className="place-content-center w-full flex-1">
           <SearchForm />
         </div>
-        <div className="place-content-center w-12 h-12 lg:w-16 lg:h-20">
+        <div className="place-content-center w-16 h-16 lg:w-24 lg:h-24">
           <Image alt="logo" src={todoooLogo} />
         </div>
       </div>

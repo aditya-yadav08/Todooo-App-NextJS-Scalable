@@ -13,7 +13,8 @@ import { signOutAction } from "@/actions/auth-action";
 
 export default function UserProfile() {
   const session = useSession();
-  const imageURL = session?.data?.user?.image;
+
+  const imageUrl = session?.data?.user?.image;
   const name = session?.data?.user?.name;
   const email = session?.data?.user?.email;
 
@@ -24,9 +25,9 @@ export default function UserProfile() {
           variant={"secondary"}
           className="flex items-center justify-start gap-1 lg:gap-2 m-0 p-0 lg:px-3 lg:w-full bg-white"
         >
-          {imageURL && (
+          {imageUrl && (
             <Image
-              src={imageURL}
+              src={imageUrl}
               width={24}
               height={24}
               alt={`${name} profile picture`}
@@ -40,9 +41,9 @@ export default function UserProfile() {
         <DropdownMenuItem className="lg:w-full px-28 flex items-center justify-center">
           <form action={signOutAction}>
             <Button
-              variant={"ghost"}
               type="submit"
-              className="hover:text-primary text-center"
+              variant={"ghost"}
+              className="hover:text-primary"
             >
               Sign out
             </Button>
