@@ -35,7 +35,17 @@ export default function TodoList() {
         <Todos items={completedTodos}/>
       </div>
 
-      <CompletedTodos totalTodos={totalTodos}/>
+      {todos.length === 0 ? (
+        <div className="flex flex-1 items-center justify-center pt-40">
+          <div className="flex flex-col items-center gap-1 text-center">
+          <h1 className="text-xl font-semibold tracking-tight">Your peace of mind is priceless</h1>
+          <p className="text-sm text-muted-foreground">Well done! All your tasks are organized in the right place.</p>
+          </div>
+        </div>
+      ) : (
+        <CompletedTodos totalTodos={totalTodos} />
+      )}
+      
     </div>
   );
 }

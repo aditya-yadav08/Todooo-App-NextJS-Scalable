@@ -68,6 +68,7 @@ export default function LoginForm() {
               <form action={signInAction}>
                 <GetStartedButton />
               </form>
+              <Link  href="https://github.com/aditya-yadav08/Todooo-App-NextJS-Scalable" target="_blank">
               <div className="w-fit items-center">
                 <Button
                   className="text-xl text-center px-4 py-7 bg-transparent border-purple-500/50"
@@ -76,6 +77,7 @@ export default function LoginForm() {
                   Star on Github ⭐️
                 </Button>
               </div>
+              </Link>
             </div>
           </div>
         </div>
@@ -114,11 +116,11 @@ export default function LoginForm() {
             </a>
             and
             <a
-              href="https://www.openai.com/"
+              href="https://ai.google.dev/"
               target="_blank"
               className="pl-1 font-bold transition hover:text-black/50"
             >
-              OpenAI
+              Google Gemini
             </a>
           </div>
           <div className="flex space-x-4 pb-4 sm:pb-0">
