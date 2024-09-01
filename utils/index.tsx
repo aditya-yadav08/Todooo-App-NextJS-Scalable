@@ -25,3 +25,5 @@ export const primaryNavItems = [
 ];
 
 export const GET_STARTED_PROJECT_ID = "k97cpa1q8rbfjeecwzs26yzzq16yqmkk";
+export const PERSONAL_LABEL_ID = "k5757cjp6d2nfr7exfmwmebb5s6yq1sv";
+export const AI_LABEL_ID = "k574vq4y8w9t2qv80kcfktv6w96z1dad";

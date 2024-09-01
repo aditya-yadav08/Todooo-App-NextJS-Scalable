@@ -37,6 +37,24 @@ export const getCompletedTodosByProjectId = query({
   },
 });
 
+export const getCompletedTodosByLabelId = query({
+  args: {
+    labelId: v.id("labels"),
+  },
+  handler: async (ctx, { labelId }) => {
+    const userId = await handleUserId(ctx);
+    if (userId) {
+      return await ctx.db
+        .query("todos")
+        .filter((q) => q.eq(q.field("userId"), userId))
+        .filter((q) => q.eq(q.field("labelId"), labelId))
+        .filter((q) => q.eq(q.field("isCompleted"), true))
+        .collect();
+    }
+    return [];
+  },
+});
+
 export const getTodosByProjectId = query({
   args: {
     projectId: v.id("projects"),
@@ -48,6 +66,23 @@ export const getTodosByProjectId = query({
         .query("todos")
         .filter((q) => q.eq(q.field("userId"), userId))
         .filter((q) => q.eq(q.field("projectId"), projectId))
+        .collect();
+    }
+    return [];
+  },
+});
+
+export const getTodosByLabelId = query({
+  args: {
+    labelId: v.id("labels"),
+  },
+  handler: async (ctx, { labelId }) => {
+    const userId = await handleUserId(ctx);
+    if (userId) {
+      return await ctx.db
+        .query("todos")
+        .filter((q) => q.eq(q.field("userId"), userId))
+        .filter((q) => q.eq(q.field("labelId"), labelId))
         .collect();
     }
     return [];
@@ -72,6 +107,24 @@ export const getInCompleteTodosByProjectId = query({
   },
 });
 
+export const getInCompleteTodosByLabelId = query({
+  args: {
+    labelId: v.id("labels"),
+  },
+  handler: async (ctx, { labelId }) => {
+    const userId = await handleUserId(ctx);
+    if (userId) {
+      return await ctx.db
+        .query("todos")
+        .filter((q) => q.eq(q.field("userId"), userId))
+        .filter((q) => q.eq(q.field("labelId"), labelId))
+        .filter((q) => q.eq(q.field("isCompleted"), false))
+        .collect();
+    }
+    return [];
+  },
+});
+
 export const getTodosTotalByProjectId = query({
   args: {
     projectId: v.id("projects"),
@@ -83,6 +136,26 @@ export const getTodosTotalByProjectId = query({
         .query("todos")
         .filter((q) => q.eq(q.field("userId"), userId))
         .filter((q) => q.eq(q.field("projectId"), projectId))
+        .filter((q) => q.eq(q.field("isCompleted"), true))
+        .collect();
+
+      return todos?.length || 0;
+    }
+    return 0;
+  },
+});
+
+export const getTodosTotalByLabelId = query({
+  args: {
+    labelId: v.id("labels"),
+  },
+  handler: async (ctx, { labelId }) => {
+    const userId = await handleUserId(ctx);
+    if (userId) {
+      const todos = await ctx.db
+        .query("todos")
+        .filter((q) => q.eq(q.field("userId"), userId))
+        .filter((q) => q.eq(q.field("labelId"), labelId))
         .filter((q) => q.eq(q.field("isCompleted"), true))
         .collect();
 

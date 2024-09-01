@@ -111,9 +111,9 @@ export default function MobileNav({
       <div className="flex items-center md:justify-between w-full gap-1 md:gap-2 py-2">
         <div className="lg:flex-1">
           <Link href={navLink}>
-            {/* <p className="text-sm font-semibold text-foreground/70 w-24">
+            <p className="text-sm font-semibold text-foreground/70 w-24">
               {navTitle}
-            </p> */}
+            </p>
           </Link>
         </div>
         <div className="place-content-center w-full flex-1">
